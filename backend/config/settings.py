@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "django.contrib.gis",
+    "apps.risk",
 ]
 
 MIDDLEWARE = [
@@ -108,3 +111,6 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "risk-intelligence"}}
+CELERY_BEAT_SCHEDULE = {"refresh-risk-cache": {"task": "apps.risk.tasks.refresh_risk_cache", "schedule": 900}, "recalculate-high-risk-zones": {"task": "apps.risk.tasks.recalculate_high_risk_zones", "schedule": 1800}, "sync-historical-data": {"task": "apps.risk.tasks.sync_historical_data", "schedule": 86400}, "rebuild-zone-statistics": {"task": "apps.risk.tasks.rebuild_zone_statistics", "schedule": 86400}}
